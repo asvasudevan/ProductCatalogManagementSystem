@@ -146,19 +146,23 @@ public class ProductRepository{
 			mediaArayJsonbObj.setType("json");
 			mediaArayJsonbObj.setValue(mediaArayGson.toJson(mediaListHolder));
 
+			Long catId = inProduct.getCategory().getId();
+
+			System.out.println("catId during product insert ======>"+catId);
+
 			return jdbcTemplate.update("insert into product (" +
 							"prod_id, prod_name, prod_desc, prod_url, prod_active, prod_new," +
 							"prod_retail_price, prod_sale_price, prod_discount, prod_currency, prod_medias, cat_id)"+
 							"values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 					new Object[] { productId, inProduct.getName(), inProduct.getDescription(), inProduct.getUrl(),
 							inProduct.getIsActive(), inProduct.getIsNew(), inProduct.getRetailPrice(), inProduct.getSalePrice(),
-							inProduct.getDiscount(), currencyJsonbObj, mediaArayJsonbObj, inProduct.getCategoryId()},
+							inProduct.getDiscount(), currencyJsonbObj, mediaArayJsonbObj, catId},
 					new int[]{Types.BIGINT, Types.VARCHAR,Types.VARCHAR, Types.VARCHAR,
 							Types.BOOLEAN, Types.BOOLEAN, Types.DOUBLE, Types.DOUBLE,
 							Types.DOUBLE, Types.OTHER, Types.OTHER, Types.BIGINT});
 
 		}catch (SQLException e){
-			logger.info("Exception occured while inserting the Product");
+			logger.info("Exception occurred while inserting the Product");
 			throw new CatalogManagementException(1002L, e.getMessage()+" SQL exception during product creation");
 
 		}
@@ -236,10 +240,11 @@ public class ProductRepository{
 					mediaListHolder  = gson.fromJson(String.valueOf(row.get("prod_medias")), MediaListHolder.class);
 					product.setMedias(mediaListHolder.getMedias());
 
-					product.setCategoryId((Long) row.get("cat_id"));
+					Long catId = (Long) row.get("cat_id");
+					product.setCategoryId(catId);
 
 					// setting the category in product
-					product.setCategory(getCategoryHierarchy(categoryName));
+					product.setCategory(getCategoryHierarchy(catId));
 
 					product.setSkus(skus);
 					pMap.put(productId, product);
@@ -263,9 +268,9 @@ public class ProductRepository{
 		return productListHolder;
 	}
 
-	private Category getCategoryHierarchy(String categoryName){
+	private Category getCategoryHierarchy(Long catId){
 		String sql = "WITH RECURSIVE c1 as (select cat_id, cat_name, cat_parent_id, cat_url_key, cat_url, cat_active, " +
-				"cat_navigation_included, cat_featured from category a where cat_id=4\n" +
+				"cat_navigation_included, cat_featured from category a where cat_id="+catId+"\n " +
 				"\t\t\t\t\t union all \n" +
 				"\t\t\t\t\t select in_cat.cat_id, in_cat.cat_name, in_cat.cat_parent_id, in_cat.cat_url_key, in_cat.cat_url, \n" +
 				"\t\t\t\t\t  \t\tin_cat.cat_active, in_cat.cat_navigation_included, in_cat.cat_featured  \n" +

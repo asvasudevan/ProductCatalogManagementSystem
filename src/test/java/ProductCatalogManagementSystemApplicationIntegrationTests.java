@@ -27,7 +27,7 @@ public class ProductCatalogManagementSystemApplicationIntegrationTests {
     public void fetchProductTest(){
         TestRestTemplate restTemplate = new TestRestTemplate();
         final HttpHeaders headers = new HttpHeaders();
-        headers.set("x-api-key", "vasu");
+      //  headers.set("x-api-key", "vasu");
         final HttpEntity<String> entity = new HttpEntity<String>(headers);
         try{
             ResponseEntity<ProductListHolder> response = restTemplate.exchange("http://localhost:+"+port+"/ww/api/pcms/products?category=full grain leather sofa",
@@ -45,7 +45,7 @@ public class ProductCatalogManagementSystemApplicationIntegrationTests {
     public void addProductTest(){
         TestRestTemplate restTemplate = new TestRestTemplate();
         final HttpHeaders headers = new HttpHeaders();
-        headers.set("x-api-key", "vasu");
+        //headers.set("x-api-key", "vasu");
         try{
             final HttpEntity<ProductListHolder> entity = new HttpEntity(getTestProduct(), headers);
             ResponseEntity<Product> response = restTemplate.postForEntity(new URI("http://localhost:"+port+"/ww/api/pcms/products"),entity, Product.class);

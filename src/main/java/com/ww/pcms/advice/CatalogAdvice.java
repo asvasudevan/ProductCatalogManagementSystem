@@ -1,11 +1,13 @@
 package com.ww.pcms.advice;
 
+import com.ww.pcms.Exception.CatalogManagementException;
 import com.ww.pcms.Exception.EmptyInputException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice(basePackages = "com.ww.pcms.controller")
@@ -24,5 +26,15 @@ public class CatalogAdvice {
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> handleException(Exception exception){
 		return new ResponseEntity<String> ("Server error occurred:", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(CatalogManagementException.class)
+	public ResponseEntity<String> handleException(CatalogManagementException exception){
+		return new ResponseEntity<String> ("CatalogManagementException - Server error occurred:", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(SQLException.class)
+	public ResponseEntity<String> handleException(SQLException exception){
+		return new ResponseEntity<String> ("SQLException - Server error occurred:", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

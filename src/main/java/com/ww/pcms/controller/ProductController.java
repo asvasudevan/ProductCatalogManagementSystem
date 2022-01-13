@@ -7,16 +7,24 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("ww/api/pcms")
-@Api(value="Product API", description="WW Product Catelog Management System")
+@Api(value="Product API", description="WW Product Catalog Management System")
 public class ProductController {
 
-	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	public ProductController(ProductService productService){
+		this.productService = productService;
+	}
 
 	@ApiOperation(value="New Product Creation")
 	@PostMapping("/products")
@@ -24,7 +32,7 @@ public class ProductController {
 		return productService.addProduct(inProduct);
 	}
 
-	@ApiOperation(value="Retrive products using catalog name")
+	@ApiOperation(value="Retrieve products using catalog name")
 	@GetMapping("/products")
 	public ResponseEntity<ProductListHolder> getAllProductsByCategory(@RequestParam String category){
 		return productService.fetchAllProductsByCategory(category);

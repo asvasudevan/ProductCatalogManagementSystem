@@ -1,6 +1,5 @@
 package com.ww.pcms;
 
-import com.ww.pcms.filter.APIKeyRequestFilter;
 import com.ww.pcms.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,37 +25,13 @@ public class ProductCatalogManagementSystemApplication {
 	}
 
 	@Configuration
-	@EnableWebSecurity
-	@Order(1)
 	public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-		private String principalRequestHeader = "x-api-key";
-
-		private String principalRequestValue = "vasu";
-
-	    @Override
-	    protected void configure(HttpSecurity httpSecurity) throws Exception {
-			APIKeyRequestFilter filter = new APIKeyRequestFilter(principalRequestHeader);
-			filter.setAuthenticationManager(new AuthenticationManager() {
-
-				@Override
-				public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-					String principal = (String) authentication.getPrincipal();
-					if (!principalRequestValue.equals(principal))
-					{
-						throw new BadCredentialsException("The API key was not found or not the expected value.");
-					}
-					authentication.setAuthenticated(true);
-					logger.info("Authentication is successful");
-					return authentication;
-				}
-			});
-			httpSecurity.
-					antMatcher("/**").
-					csrf().disable().
-					sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
-					and().addFilter(filter).authorizeRequests().anyRequest().authenticated();
-
+		@Override
+		protected void configure(HttpSecurity httpSecurity) throws Exception {
+			httpSecurity.csrf().disable().authorizeRequests().antMatchers("/").permitAll().and().authorizeRequests()
+					.antMatchers("/**").permitAll();
+			httpSecurity.headers().frameOptions().disable();
 		}
 	}
 }

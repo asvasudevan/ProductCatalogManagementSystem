@@ -21,13 +21,13 @@ public class CategoryParent {
     @ApiModelProperty(value="Category url")
     private String url;
 
-    CategoryParent categoryParent;
+    CategoryParent parent;
 
     public void assignParent(CategoryParent categoryParent){
-        if(getCategoryParent() == null){
-            setCategoryParent(categoryParent);
+        if(getParent() == null){
+            setParent(categoryParent);
         }else{
-            getCategoryParent().assignParent(categoryParent);
+            getParent().assignParent(categoryParent);
          }
     }
 
