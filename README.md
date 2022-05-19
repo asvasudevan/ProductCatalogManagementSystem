@@ -2,8 +2,7 @@
 install postgres in your local PC.
 create a database "ubuntu". 
 Enclose the database name ubuntu with double quotes since postgres is case-sensitive.  
-run the below sql commands to have necessary DB objects and references. 
-
+run the below sql commands to have necessary DB objects and references.
 # DB Scripts
 
 
